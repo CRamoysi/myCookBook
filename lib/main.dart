@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:cookbook/recipeDetails.dart';
-import 'package:cookbook/recipeData.dart';
+import 'package:cookbook/recipe_data.dart';
+
+import 'package:cookbook/widget/recipe_research_bar.dart';
+import 'package:cookbook/widget/recipe_card.dart';
 
 void main() => runApp(MyApp());
 
@@ -30,7 +32,7 @@ class MyHomePage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Column(children: [
-          ResearchRecipes(),
+          RecipeResearchBar(),
           SizedBox(height: 10),
           Expanded(
             child: ListOfRecipes(),
@@ -38,67 +40,6 @@ class MyHomePage extends StatelessWidget {
         ]),
       ), //
     );
-  }
-}
-
-/// Zone de recherche d'une recette
-class ResearchRecipes extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 50,
-        child: Row(
-          children: [
-            Expanded(
-                child: Container(
-              height: 50,
-              padding: EdgeInsets.only(left: 5),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 4,
-                      offset: Offset(1, 3),
-                    )
-                  ]),
-              child: TextField(
-                decoration: InputDecoration(
-                    hintText: 'Recherche',
-                    contentPadding: EdgeInsets.all(10),
-                    hintStyle: TextStyle(color: Colors.grey),
-                    border: InputBorder.none),
-              ),
-            )),
-            SizedBox(width: 10),
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                  color: UIColor,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      blurRadius: 4,
-                      offset: Offset(1, 3),
-                    )
-                  ]),
-              child: ElevatedButton(
-                ///@TODO
-                onPressed: null,
-                child: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                ),
-              ),
-            )
-          ],
-        ));
   }
 }
 
@@ -112,80 +53,6 @@ class ListOfRecipes extends StatelessWidget {
         //@TODO cette liste devra etre peuplé avec une requette firebase
         return RecipeCard(recipeList[index]);
       },
-    );
-  }
-}
-
-///Une recette dans la liste sous forme de carte
-class RecipeCard extends StatelessWidget {
-  final Map recipeData;
-  RecipeCard(this.recipeData);
-  @override
-  Widget build(BuildContext context) {
-    final DecorationImage photo = DecorationImage(
-        image: AssetImage('rss/noPhoto.png'), fit: BoxFit.cover);
-    //@TODO a gerer avec firebase (NetworkImage)
-
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return MyRecipePage(); //@TODO transferer les infos pour savoir quelle recette afficher
-            },
-            settings: RouteSettings(
-              arguments: recipeData,
-            ),
-          ),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.only(bottom: 10),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(
-              Radius.circular(20),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                blurRadius: 4,
-                offset: Offset(1, 3),
-              )
-            ]),
-        child: Column(
-          children: [
-            Container(
-              //La photo
-
-              height: 80,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
-                image: photo,
-              ),
-            ),
-            Container(
-              child: Column(
-                children: [
-                  //le titre
-                  Text(
-                    recipeData['title'],
-                    style: appFont,
-                  ),
-                  Text(
-                    recipeData['description'],
-                    style: appFont,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
